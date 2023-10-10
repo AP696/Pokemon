@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .card {
+            width: 18rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row" id="pokemon-cards">
+            {% for pokemon in pokemon_list %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="" class="card-img-top" alt="{{ pokemon['name'] }} image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ pokemon['name'] }}</h5>
+                            <p class="card-text"></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const name = card.querySelector('.card-title').textContent;
+                fetch(`https://pokeapi.co/api/v2/pokemon/${name}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const img = card.querySelector('.card-img-top');
+                        img.src = data.sprites.front_default;
+                        const p = card.querySelector('.card-text');
+                        p.textContent = `Weight: ${data.weight} Height: ${data.height}`;
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+</body>
+</html>
